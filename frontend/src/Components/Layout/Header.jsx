@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import '../../App.css'
 
 import { Link, useNavigate } from 'react-router-dom'
+import Search from './Search'
 
 
 // import { getUser, logout } from '../../utils/helpers'
@@ -20,6 +21,7 @@ const Header = () => {
 
                     </div>
                 </div>
+                <Search />
                 
             </nav>
         </>

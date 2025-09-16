@@ -1,5 +1,6 @@
 const Product = require('../models/product')
 const Order = require('../models/order');
+const APIFeatures = require('../utils/apiFeatures');
 
 const cloudinary = require('cloudinary')
 
@@ -150,17 +151,32 @@ exports.getProducts = async (req, res) => {
     const resPerPage = 4;
     const productsCount = await Product.countDocuments();
 
-    const products = await Product.find({})
+    // const products = await Product.find({})
+    const apiFeatures = new APIFeatures(Product.find(), req.query).search()
 
+    const products = await apiFeatures.query;
+    let filteredProductsCount = products.length;
 
     if (!products)
         return res.status(400).json({ message: 'error loading products' })
-    
     return res.status(200).json({
         success: true,
         products,
+        filteredProductsCount,
         resPerPage,
         productsCount,
 
     })
+
+
+    // if (!products)
+    //     return res.status(400).json({ message: 'error loading products' })
+
+    // return res.status(200).json({
+    //     success: true,
+    //     products,
+    //     resPerPage,
+    //     productsCount,
+
+    // })
 }
