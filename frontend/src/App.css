@@ -467,7 +467,7 @@ footer {
 }
 
 /* Pagination */
-.page-item.active .page-link {
+/* .page-item.active .page-link {
   background-color: #fa9c23;
   border-color: #fa9c23;
 }
@@ -478,7 +478,7 @@ footer {
 
 .page-link:hover {
   color: #fa9c23;
-}
+} */
 
 /* Admin Sidebar */
 
