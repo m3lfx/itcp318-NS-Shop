@@ -117,8 +117,13 @@ const Home = () => {
                                 // onChange={setCurrentPageNo}
                                 color="primary"
                                 variant="outlined"
+                                shape="rounded" 
                                 showFirstButton
                                 showLastButton
+                                size="large"
+                                sx={{backgroundColor: 'white',
+                                    
+                                }}
                             />
                         </Stack>
                     </div>
