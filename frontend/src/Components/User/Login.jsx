@@ -8,7 +8,7 @@ import MetaData from '../Layout/MetaData';
 
 import axios from 'axios';
 
-import { authenticate } from '../Utils/helpers';
+import { authenticate, getUser } from '../Utils/helpers';
 
 
 
@@ -48,6 +48,12 @@ const Login = () => {
         e.preventDefault();
         login(email, password)
     }
+
+     useEffect(() => {
+        if (getUser()  ) {
+             navigate('/')
+        }
+    }, [])
 
 
     return (
