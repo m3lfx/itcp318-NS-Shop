@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Loader from '../Layout/Loader'
 import MetaData from '../Layout/MetaData';
 
 import axios from 'axios';
+
+import { authenticate } from '../Utils/helpers';
 
 
 
@@ -14,8 +18,8 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false)
 
-    // let location = useLocation()
-    // const navigate = useNavigate()
+    let location = useLocation()
+    const navigate = useNavigate()
 
     console.log(location)
     // const redirect = location.search ? new URLSearchParams(location.search).get('redirect') : ''
@@ -23,27 +27,27 @@ const Login = () => {
     //     position: toast.POSITION.BOTTOM_RIGHT
     // });
 
-    // const login = async (email, password) => {
-    //     try {
-    //         const config = {
-    //             headers: {
-    //                 'Content-Type': 'application/json'
-    //             }
-    //         }
-    //         const { data } = await axios.post(`http://localhost:4001/api/v1/login`, { email, password }, config)
-    //         console.log(data)
-    //         authenticate(data, () => navigate("/"))
+    const login = async (email, password) => {
+        try {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+            const { data } = await axios.post(`http://localhost:4001/api/v1/login`, { email, password }, config)
+            console.log(data)
+            authenticate(data, () => navigate("/"))
 
-    //     } catch (error) {
-    //         toast.error("invalid user or password", {
-    //             position: 'bottom-right'
-    //         })
-    //     }
-    // }
-    // const submitHandler = (e) => {
-    //     e.preventDefault();
-    //    login(email, password)
-    // }
+        } catch (error) {
+            toast.error("invalid user or password", {
+                position: 'bottom-right'
+            })
+        }
+    }
+    const submitHandler = (e) => {
+        e.preventDefault();
+        login(email, password)
+    }
 
 
     return (
@@ -55,7 +59,7 @@ const Login = () => {
                     <div className="row wrapper">
                         <div className="col-10 col-lg-5">
                             <form className="shadow-lg"
-                            // onSubmit={submitHandler}
+                                onSubmit={submitHandler}
                             >
                                 <h1 className="mb-3">Login</h1>
                                 <div className="form-group">
