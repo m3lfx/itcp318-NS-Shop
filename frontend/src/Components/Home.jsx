@@ -7,6 +7,8 @@ import Stack from '@mui/material/Stack'
 import Product from './Product/Product'
 import MetaData from './Layout/MetaData'
 import Loader from './Layout/Loader'
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
 
 const Home = () => {
     const [products, setProducts] = useState([])
@@ -15,6 +17,7 @@ const Home = () => {
     const [filteredProductsCount, setFilteredProductsCount] = useState(0)
     const [loading, setLoading] = useState(true)
     const [currentPage, setCurrentPage] = useState(1)
+    const [price, setPrice] = useState([1, 1000]);
 
     let { keyword } = useParams();
 
@@ -27,9 +30,17 @@ const Home = () => {
     // function setCurrentPageNo(pageNumber) {
     //     setCurrentPage(pageNumber)
     // }
+    function valuetext(price) {
+        return `$${price.toString()}`;
+    }
+    const handleChange = (event, newValue) => {
+        setPrice(newValue);
+    };
 
-    const getProducts = async (keyword = '', page = 1) => {
-        let link = `http://localhost:4001/api/v1/products?keyword=${keyword}&page=${page}`
+    const getProducts = async (keyword = '', page = 1, price) => {
+        // let link = `http://localhost:4001/api/v1/products?keyword=${keyword}&page=${page}`
+        let link = `http://localhost:4001/api/v1/products?keyword=${keyword}&page=${page}&price[gte]=${price[0]}&price[lte]=${price[1]}`
+
 
         let res = await axios.get(link)
         console.log(res)
@@ -42,42 +53,38 @@ const Home = () => {
     }
 
     useEffect(() => {
-        getProducts(keyword, currentPage)
-    }, [keyword, currentPage]);
+        getProducts(keyword, currentPage, price)
+    }, [keyword, currentPage, price]);
+    console.log(price)
     return (
         <>
             <MetaData title={'Buy Best Products Online'} />
             {loading ? <Loader /> : (<div className="container container-fluid">
                 <h1 id="products_heading">Latest Products</h1>
                 <section id="products" className="container mt-5">
-                    <div className="row">
+                    {/* <div className="row">
                         {products && products.map(product => (
                             <Product key={product._id} product={product} />
                         ))}
-                    </div>
-                    {/* <div className="row">
+                    </div> */}
+                    <div className="row">
                         {keyword ? (
                             <>
                                 <div className="col-6 col-md-3 mt-5 mb-5">
                                     <div className="px-5">
-                                        <Range
-                                            marks={{
-                                                1: `$1`,
-                                                1000: `$1000`
-                                            }}
-                                            min={1}
-                                            max={1000}
-                                            defaultValue={[1, 1000]}
-                                            tipFormatter={value => `$${value}`}
-                                            tipProps={{
-                                                placement: "top",
-                                                visible: true
-                                            }}
-                                            value={price}
-                                            onChange={price => setPrice(price)}
-                                        />
-                                        <hr className="my-5" />
-                                        <hr className="my-5" />
+
+                                        <Box sx={{ width: 200 }}>
+                                            <Slider
+                                                getAriaLabel={() => 'Price Filter'}
+                                                value={price}
+                                                onChange={handleChange}
+                                                valueLabelDisplay="auto"
+                                                getAriaValueText={valuetext}
+                                                min={1}
+                                                max={1000}
+
+                                            />
+                                        </Box>
                                         <div className="mt-5">
                                             <h4 className="mb-3">
                                                 Categories
@@ -103,7 +110,7 @@ const Home = () => {
                             ))
                         )}
 
-                    </div> */}
+                    </div>
 
                 </section>
 
@@ -117,12 +124,13 @@ const Home = () => {
                                 // onChange={setCurrentPageNo}
                                 color="primary"
                                 variant="outlined"
-                                shape="rounded" 
+                                shape="rounded"
                                 showFirstButton
                                 showLastButton
                                 size="large"
-                                sx={{backgroundColor: 'white',
-                                    
+                                sx={{
+                                    backgroundColor: 'white',
+
                                 }}
                             />
                         </Stack>
