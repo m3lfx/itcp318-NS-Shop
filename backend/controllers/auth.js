@@ -1,7 +1,7 @@
 const User = require('../models/user');
 const crypto = require('crypto')
 const cloudinary = require('cloudinary')
-
+const sendEmail = require('../utils/sendEmail')
 exports.registerUser = async (req, res, next) => {
     const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
         folder: 'avatars',
@@ -64,4 +64,37 @@ exports.loginUser = async (req, res, next) => {
     });
     //  user = await User.findOne({ email })
     // sendToken(user, 200, res)
+}
+
+exports.forgotPassword = async (req, res, next) => {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+        return res.status(404).json({ error: 'User not found with this email' })
+
+    }
+    // Get reset token
+    const resetToken = user.getResetPasswordToken();
+    await user.save({ validateBeforeSave: false });
+    // Create reset password url
+    const resetUrl = `${req.protocol}://localhost:5173/password/reset/${resetToken}`;
+    const message = `Your password reset token is as follow:\n\n${resetUrl}\n\nIf you have not requested this email, then ignore it.`
+    try {
+        await sendEmail({
+            email: user.email,
+            subject: 'ShopIT Password Recovery',
+            message
+        })
+
+        res.status(200).json({
+            success: true,
+            message: `Email sent to: ${user.email}`
+        })
+
+    } catch (error) {
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        await user.save({ validateBeforeSave: false });
+        return res.status(500).json({ error: error.message })
+      
+    }
 }

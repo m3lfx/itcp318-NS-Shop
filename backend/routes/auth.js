@@ -3,11 +3,13 @@ const router = express.Router();
 const upload = require("../utils/multer");
 const { registerUser,
     loginUser,
+    forgotPassword,
 
 
 } = require('../controllers/auth');
 
 router.post('/register', upload.single("avatar"), registerUser);
 router.post('/login', loginUser);
+router.post('/password/forgot', forgotPassword);
 
 module.exports = router;
