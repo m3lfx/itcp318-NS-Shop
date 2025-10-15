@@ -11,6 +11,10 @@ import ProductDetails from './Components/Product/ProductDetails';
 import Login from './Components/User/Login';
 import Register from './Components/User/Register';
 import ForgotPassword from './Components/User/ForgotPassword';
+import NewPassword from './Components/User/NewPassword';
+import Profile from './Components/User/Profile';
+import UpdatePassword from './Components/User/UpdatePassword';
+import UpdateProfile from './Components/User/'
 function App() {
   return (
     <>
@@ -23,6 +27,11 @@ function App() {
           <Route path="/login" element={<Login />} exact="true" />
           <Route path="/register" element={<Register exact="true" />} />
           <Route path="/password/forgot" element={<ForgotPassword />} exact="true" />
+          <Route path="/password/reset/:token" element={<NewPassword />} exact="true" />
+          <Route path="/me" element={<Profile />} exact="true" />
+          <Route path="/me/update" element={<UpdateProfile />} exact="true"
+          />
+          <Route path="/password/update" element={<UpdatePassword />} />
         </Routes>
 
       </Router>

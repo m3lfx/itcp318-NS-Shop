@@ -98,3 +98,105 @@ exports.forgotPassword = async (req, res, next) => {
       
     }
 }
+
+exports.resetPassword = async (req, res, next) => {
+    console.log(req.params.token)
+    // Hash URL token
+    const resetPasswordToken = crypto.createHash('sha256').update(req.params.token).digest('hex')
+    const user = await User.findOne({
+        // resetPasswordToken,
+        resetPasswordExpire: { $gt: Date.now() }
+    })
+    console.log(user)
+
+    if (!user) {
+        return res.status(400).json({ message: 'Password reset token is invalid or has been expired' })
+        
+    }
+
+    if (req.body.password !== req.body.confirmPassword) {
+        return res.status(400).json({ message: 'Password does not match' })
+
+    }
+
+    // Setup new password
+    user.password = req.body.password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+    const token = user.getJwtToken();
+    return res.status(201).json({
+        success: true,
+        token,
+        user
+    });
+   
+}
+
+exports.getUserProfile = async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+    console.log(user)
+
+    return res.status(200).json({
+        success: true,
+        user
+    })
+}
+
+exports.updateProfile = async (req, res, next) => {
+
+    const newUserData = {
+        name: req.body.name,
+        email: req.body.email
+    }
+
+    // Update avatar
+    if (req.body.avatar !== '') {
+        let user = await User.findById(req.user.id)
+        // console.log(user)
+        const image_id = user.avatar.public_id;
+        const res = await cloudinary.v2.uploader.destroy(image_id);
+        // console.log("Res", res)
+        const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
+            folder: 'avatars',
+            width: 150,
+            crop: "scale"
+        })
+
+        newUserData.avatar = {
+            public_id: result.public_id,
+            url: result.secure_url
+        }
+    }
+    const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+        new: true,
+        runValidators: true,
+    })
+    if (!user) {
+        return res.status(401).json({ message: 'User Not Updated' })
+    }
+
+    return res.status(200).json({
+        success: true,
+        user
+    })
+}
+
+exports.updatePassword = async (req, res, next) => {
+    console.log(req.body.password)
+    const user = await User.findById(req.user.id).select('+password');
+    // Check previous user password
+    const isMatched = await user.comparePassword(req.body.oldPassword)
+    if (!isMatched) {
+        return res.status(400).json({ message: 'Old password is incorrect' })
+    }
+    user.password = req.body.password;
+    await user.save();
+    const token = user.getJwtToken();
+
+    return res.status(201).json({
+        success: true,
+        user,
+        token
+    });
+}
