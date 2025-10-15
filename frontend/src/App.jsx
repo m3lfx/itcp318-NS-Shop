@@ -14,7 +14,7 @@ import ForgotPassword from './Components/User/ForgotPassword';
 import NewPassword from './Components/User/NewPassword';
 import Profile from './Components/User/Profile';
 import UpdatePassword from './Components/User/UpdatePassword';
-import UpdateProfile from './Components/User/'
+import UpdateProfile from './Components/User/UpdateProfile'
 function App() {
   return (
     <>

@@ -104,7 +104,7 @@ exports.resetPassword = async (req, res, next) => {
     // Hash URL token
     const resetPasswordToken = crypto.createHash('sha256').update(req.params.token).digest('hex')
     const user = await User.findOne({
-        // resetPasswordToken,
+        resetPasswordToken,
         resetPasswordExpire: { $gt: Date.now() }
     })
     console.log(user)
