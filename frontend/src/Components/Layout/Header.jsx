@@ -8,15 +8,15 @@ import { getUser, logout } from '../Utils/helpers'
 import { toast } from 'react-toastify'
 
 
-// import { getUser, logout } from '../../utils/helpers'
-const Header = () => {
+
+const Header = ({cartItems}) => {
 
     const [user, setUser] = useState({})
     const navigate = useNavigate()
 
     const logoutHandler = () => {
         logout(navigate('/'));
-       
+
         toast.success('log out', {
             position: 'bottom-right'
         });
@@ -80,9 +80,10 @@ const Header = () => {
                     <Link to="/cart" style={{ textDecoration: 'none' }} >
                         <span id="cart" className="ml-3">Cart</span>
 
-                        <span className="ml-1" id="cart_count">2</span>
+                        {/* <span className="ml-1" id="cart_count">2</span> */}
+
+                        <span className="ml-1" id="cart_count">{cartItems ? cartItems.length : null}</span>
                     </Link>
-                    {/* <span className="ml-1" id="cart_count">{cartItems ? cartItems.length : null}</span>  */}
                 </div>
 
             </nav>
