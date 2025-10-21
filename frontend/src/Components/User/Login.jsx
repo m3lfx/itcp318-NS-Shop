@@ -22,7 +22,7 @@ const Login = () => {
     const navigate = useNavigate()
 
     console.log(location)
-    // const redirect = location.search ? new URLSearchParams(location.search).get('redirect') : ''
+    const redirect = location.search ? new URLSearchParams(location.search).get('redirect') : ''
     // const notify = (error) => toast.error(error, {
     //     position: toast.POSITION.BOTTOM_RIGHT
     // });
@@ -49,9 +49,9 @@ const Login = () => {
         login(email, password)
     }
 
-     useEffect(() => {
-        if (getUser()  ) {
-             navigate('/')
+    useEffect(() => {
+        if (getUser() && redirect === 'shipping') {
+            navigate(`/${redirect}`)
         }
     }, [])
 
