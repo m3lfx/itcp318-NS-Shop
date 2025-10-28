@@ -27,7 +27,9 @@ import ListOrders from './Components/Order/ListOrders';
 import OrderDetails from './Components/Order/OrderDetails';
 import Dashboard from './Components/Admin/Dashboard';
 import ProductsList from './Components/Admin/ProductsList';
+import NewProduct from './Components/Admin/NewProduct';
 import axios from 'axios';
+
 function App() {
   const [state, setState] = useState({
     cartItems: localStorage.getItem('cartItems')
@@ -123,6 +125,7 @@ function App() {
           <Route path="/order/:id" element={<OrderDetails />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin/products" element={<ProductsList />} />
+          <Route path="/admin/product" element={<NewProduct />} />
         </Routes>
 
       </Router>
