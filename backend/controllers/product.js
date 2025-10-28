@@ -98,12 +98,17 @@ exports.updateProduct = async (req, res, next) => {
     }
     let images = []
 
-    if (typeof req.files === 'string') {
-        images.push(req.files)
-    } else {
-        images = req.files
-    }
+    // if (typeof req.files === 'string') {
+    //     images.push(req.files)
+    // } else {
+    //     images = req.files
+    // }
     console.log(images)
+    if (typeof req.body.images === 'string') {
+		images.push(req.body.images)
+	} else {
+		images = req.body.images
+	}
     // if (images !== undefined) {
     // 	// Deleting images associated with the product
     // 	for (let i = 0; i < product.images.length; i++) {
@@ -112,7 +117,7 @@ exports.updateProduct = async (req, res, next) => {
     // }
     let imagesLinks = [];
     for (let i = 0; i < images.length; i++) {
-        const result = await cloudinary.v2.uploader.upload(images[i]['path'], {
+        const result = await cloudinary.v2.uploader.upload(images[i], {
             folder: 'products',
             width: 150,
             crop: "scale",
