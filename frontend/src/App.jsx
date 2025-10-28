@@ -29,6 +29,8 @@ import Dashboard from './Components/Admin/Dashboard';
 import ProductsList from './Components/Admin/ProductsList';
 import NewProduct from './Components/Admin/NewProduct';
 import UpdateProduct from './Components/Admin/UpdateProduct';
+import OrdersList from './Components/Admin/OrdersList';
+import ProcessOrder from './Components/Admin/ProcessOrder';
 import axios from 'axios';
 
 function App() {
@@ -130,6 +132,15 @@ function App() {
           <Route
             path="/admin/product/:id"
             element={<UpdateProduct />} />
+
+          <Route
+            path="/admin/orders"
+            element={<OrdersList />}
+
+          />
+          <Route
+            path="/admin/order/:id"
+            element={<ProcessOrder />} />
         </Routes>
 
       </Router>
