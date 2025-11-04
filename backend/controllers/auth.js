@@ -200,3 +200,42 @@ exports.updatePassword = async (req, res, next) => {
         token
     });
 }
+
+exports.allUsers = async (req, res, next) => {
+    const users = await User.find();
+    res.status(200).json({
+        success: true,
+        users
+    })
+}
+
+exports.deleteUser = async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+        return res.status(401).json({ message: `User does not found with id: ${req.params.id}` })
+        // return next(new ErrorHandler(`User does not found with id: ${req.params.id}`))
+    }
+
+    // Remove avatar from cloudinary
+    const image_id = user.avatar.public_id;
+    await cloudinary.v2.uploader.destroy(image_id);
+    await User.findByIdAndDelete(req.params.id);
+    return res.status(200).json({
+        success: true,
+    })
+}
+
+exports.getUserDetails = async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+        return res.status(400).json({ message: `User does not found with id: ${req.params.id}` })
+        // return next(new ErrorHandler(`User does not found with id: ${req.params.id}`))
+    }
+
+    res.status(200).json({
+        success: true,
+        user
+    })
+}

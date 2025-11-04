@@ -1,3 +1,6 @@
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export const authenticate = (data, next) => {
     if (window !== 'undefined') {
         // console.log('authenticate', response)
@@ -36,3 +39,10 @@ export const getToken = () => {
         }
     }
 };
+
+export const errMsg = (message = '') => toast.error(message, {
+    position: 'bottom-center'
+});
+export const successMsg = (message = '') => toast.success(message, {
+    position: 'bottom-center'
+});

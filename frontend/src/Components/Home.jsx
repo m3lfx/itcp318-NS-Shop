@@ -55,7 +55,7 @@ const Home = () => {
     useEffect(() => {
         getProducts(keyword, currentPage, price)
     }, [keyword, currentPage, price]);
-    console.log(price)
+    // console.log(price)
     return (
         <>
             <MetaData title={'Buy Best Products Online'} />

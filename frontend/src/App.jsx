@@ -31,6 +31,7 @@ import NewProduct from './Components/Admin/NewProduct';
 import UpdateProduct from './Components/Admin/UpdateProduct';
 import OrdersList from './Components/Admin/OrdersList';
 import ProcessOrder from './Components/Admin/ProcessOrder';
+import UsersList from './Components/Admin/UsersList';
 import axios from 'axios';
 
 function App() {
@@ -141,6 +142,9 @@ function App() {
           <Route
             path="/admin/order/:id"
             element={<ProcessOrder />} />
+          <Route
+            path="/admin/users"
+            element={<UsersList />} />
         </Routes>
 
       </Router>

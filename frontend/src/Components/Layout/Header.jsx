@@ -3,14 +3,13 @@ import React, { useState, useEffect } from 'react'
 import '../../App.css'
 
 import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import Search from './Search'
 import { getUser, logout } from '../Utils/helpers'
-import { toast } from 'react-toastify'
 
-
-
-const Header = ({cartItems}) => {
-
+const Header = ({ cartItems }) => {
     const [user, setUser] = useState({})
     const navigate = useNavigate()
 
@@ -26,7 +25,6 @@ const Header = ({cartItems}) => {
         setUser(getUser())
     }, []);
 
-
     return (
         <>
             <nav className="navbar row">
@@ -40,18 +38,13 @@ const Header = ({cartItems}) => {
                 </div>
                 <Search />
                 {/* <div className="col-12 col-md-3 mt-4 mt-md-0 text-center">
+
                     <Link to="/login" className="btn ml-4" id="login_btn">Login</Link>
-                    <Link to="/cart" style={{ textDecoration: 'none' }} >
-
-
-                        <span className="ml-1" id="cart_count">2</span>
-                    </Link>
                 </div> */}
-
                 <div className="col-12 col-md-3 mt-4 mt-md-0 text-center">
 
                     {user ? (<div className="ml-4 dropdown d-inline">
-                        <Link to="#!" className="btn dropdown-toggle text-white mr-4" type="button" id="dropDownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <Link  className="btn dropdown-toggle text-white mr-4" type="button" id="dropDownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <figure className="avatar avatar-nav">
                                 <img
                                     src={user.avatar && user.avatar.url}
@@ -79,14 +72,14 @@ const Header = ({cartItems}) => {
 
                     <Link to="/cart" style={{ textDecoration: 'none' }} >
                         <span id="cart" className="ml-3">Cart</span>
-
-                        {/* <span className="ml-1" id="cart_count">2</span> */}
-
                         <span className="ml-1" id="cart_count">{cartItems ? cartItems.length : null}</span>
+                        {/* <span className="ml-1" id="cart_count">2</span> */}
                     </Link>
+                    {/* <span className="ml-1" id="cart_count">{cartItems ? cartItems.length : null}</span>  */}
                 </div>
 
             </nav>
+
         </>
     )
 }
