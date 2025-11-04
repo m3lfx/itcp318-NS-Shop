@@ -12,6 +12,7 @@ const { registerUser,
     allUsers,
     deleteUser,
     getUserDetails,
+    updateUser,
 
 
 
@@ -28,6 +29,6 @@ router.put('/password/update', isAuthenticatedUser, updatePassword)
 router.put('/me/update', isAuthenticatedUser,  upload.single("avatar"), updateProfile)
 router.get('/admin/users', isAuthenticatedUser, allUsers)
 
-router.route('/admin/user/:id').get(isAuthenticatedUser, getUserDetails ).delete(isAuthenticatedUser, deleteUser)
+router.route('/admin/user/:id').get(isAuthenticatedUser, getUserDetails ).delete(isAuthenticatedUser, deleteUser).put(isAuthenticatedUser,  updateUser)
 
 module.exports = router;
