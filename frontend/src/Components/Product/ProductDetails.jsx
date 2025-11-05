@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import MetaData from '../Layout/MetaData'
 import { Carousel } from 'react-bootstrap'
-
+import { getUser, getToken, successMsg, errMsg } from '../Utils/helpers'
+import ListReviews from '../Review/ListReviews'
 
 
 import axios from 'axios'
@@ -12,15 +13,17 @@ const ProductDetails = ({ addItemToCart, cartItems,}) => {
     const [product, setProduct] = useState({})
     const [error, setError] = useState('')
     const [quantity, setQuantity] = useState(1)
-    // const [user, setUser] = useState(getUser())
-    // const [rating, setRating] = useState(0)
+    const [user, setUser] = useState(getUser())
+    const [rating, setRating] = useState(0)
     const [comment, setComment] = useState('')
+    const [errorReview, setErrorReview] = useState('');
+    const [success, setSuccess] = useState('')
 
     // const [success, setSuccess] = useState('')
 
 
     let { id } = useParams()
-    // let navigate = useNavigate()
+    let navigate = useNavigate()
     const increaseQty = () => {
         const count = document.querySelector('.count')
         if (count.valueAsNumber >= product.stock) return;
@@ -45,10 +48,89 @@ const ProductDetails = ({ addItemToCart, cartItems,}) => {
         }
     }
 
+    function setUserRatings() {
+        const stars = document.querySelectorAll('.star');
+        stars.forEach((star, index) => {
+            star.starValue = index + 1;
+            ['click', 'mouseover', 'mouseout'].forEach(function (e) {
+                star.addEventListener(e, showRatings);
+            })
+        })
+        function showRatings(e) {
+            stars.forEach((star, index) => {
+                if (e.type === 'click') {
+                    if (index < this.starValue) {
+                        star.classList.add('orange');
+                        setRating(this.starValue)
+                    } else {
+                        star.classList.remove('orange')
+                    }
+                }
+                if (e.type === 'mouseover') {
+                    if (index < this.starValue) {
+                        star.classList.add('yellow');
+                    } else {
+                        star.classList.remove('yellow')
+                    }
+                }
+                if (e.type === 'mouseout') {
+                    star.classList.remove('yellow')
+                }
+            })
+        }
+    }
+
+    const newReview = async (reviewData) => {
+        try {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                }
+            }
+
+            const { data } = await axios.put(`${import.meta.env.VITE_API}/review`, reviewData, config)
+            setSuccess(data.success)
+
+        } catch (error) {
+            setErrorReview(error.response.data.message)
+        }
+    }
+
+    const reviewHandler = () => {
+        const formData = new FormData();
+        formData.set('rating', rating);
+        formData.set('comment', comment);
+        formData.set('productId', id);
+        newReview(formData)
+
+    }
+
+    // useEffect(() => {
+    //     getProductDetails(id)
+
+    // }, [id]);
+
     useEffect(() => {
         getProductDetails(id)
+        if (error) {
+            errMsg(error)
+            navigate('/')
+            setError('')
+        }
 
-    }, [id]);
+        if (errorReview) {
+            errMsg(errorReview)
+            setErrorReview('')
+        }
+        if (success) {
+            successMsg('Review posted successfully')
+            setSuccess(false)
+
+        }
+    }, [id, error, errorReview, success]);
+
+    
 
      const addToCart = async () => {
         await addItemToCart(id, quantity);
@@ -103,13 +185,13 @@ const ProductDetails = ({ addItemToCart, cartItems,}) => {
                     <hr />
                     <p id="product_seller mb-3">Sold by: <strong>{product.seller}</strong></p>
                     {/* <div className="alert alert-danger mt-5" type='alert'>Login to post your review.</div> */}
-                    <button id="review_btn" type="button" className="btn btn-primary mt-4" data-toggle="modal" data-target="#ratingModal"  >
+                    {/* <button id="review_btn" type="button" className="btn btn-primary mt-4" data-toggle="modal" data-target="#ratingModal"  >
                         Submit Your Review
-                    </button>
-                    {/* {user ? <button id="review_btn" type="button" className="btn btn-primary mt-4" data-toggle="modal" data-target="#ratingModal" onClick={setUserRatings} >
+                    </button> */}
+                    {user ? <button id="review_btn" type="button" className="btn btn-primary mt-4" data-toggle="modal" data-target="#ratingModal" onClick={setUserRatings} >
                         Submit Your Review
                     </button> :
-                        <div className="alert alert-danger mt-5" type='alert'>Login to post your review.</div>} */}
+                        <div className="alert alert-danger mt-5" type='alert'>Login to post your review.</div>}
                     <div className="row mt-2 mb-5">
                         <div className="rating w-50">
 
@@ -142,7 +224,7 @@ const ProductDetails = ({ addItemToCart, cartItems,}) => {
                                             </textarea>
 
 
-                                            <button className="btn my-3 float-right review-btn px-4 text-white" data-dismiss="modal" aria-label="Close"  >Submit</button>
+                                            <button className="btn my-3 float-right review-btn px-4 text-white" data-dismiss="modal" aria-label="Close" onClick={reviewHandler} >Submit</button>
                                         </div>
                                     </div>
                                 </div>
@@ -151,11 +233,11 @@ const ProductDetails = ({ addItemToCart, cartItems,}) => {
                         </div>
                     </div>
                 </div>
-                {/* {product.reviews && product.reviews.length > 0 && (
+                {product.reviews && product.reviews.length > 0 && (
 
                     <ListReviews reviews={product.reviews} />
 
-                )} */}
+                )}
             </div>
 
 
