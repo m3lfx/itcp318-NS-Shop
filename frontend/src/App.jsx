@@ -33,6 +33,7 @@ import OrdersList from './Components/Admin/OrdersList';
 import ProcessOrder from './Components/Admin/ProcessOrder';
 import UsersList from './Components/Admin/UsersList';
 import UpdateUser from './Components/Admin/UpdateUser';
+import ProtectedRoute from './Components/Route/ProtectedRoute';
 import axios from 'axios';
 
 function App() {
@@ -128,7 +129,7 @@ function App() {
           <Route path="/success" element={<OrderSuccess />} />
           <Route path="/orders/me" element={<ListOrders />} />
           <Route path="/order/:id" element={<OrderDetails />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* <Route path="/dashboard" element={<Dashboard />} /> */}
           <Route path="/admin/products" element={<ProductsList />} />
           <Route path="/admin/product" element={<NewProduct />} />
           <Route
@@ -147,6 +148,15 @@ function App() {
             path="/admin/users"
             element={<UsersList />} />
           <Route path="/admin/user/:id" element={<UpdateUser />} />
+
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute isAdmin={true}>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
 
       </Router>
